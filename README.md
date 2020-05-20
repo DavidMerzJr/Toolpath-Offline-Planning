@@ -22,12 +22,43 @@ ROS packages for generating offline toolpaths from CAD.  Built to run on Ubuntu 
 
     - Noether requires at least PCL 1.9 and VTK 1.7
 
+4) If using ROS Melodic, build OGRE and Rviz from source.  This will prevent numerous crashes.  (If using ROS Kinetic on Ubuntu 16.04, this step is not required.)
 
-4) Build the workspace `catkin build`
+    **OGRE**
+    - Ogre 1.9.1 can be downloaded [here](https://github.com/OGRECave/ogre/releases/tag/v1.9.1).
+    - Unzip or extract into a user-accessible directory.
+    - cd into the directory
+    - Run Cmake.  From the directory,
+    ```
+    cd build
+    cmake ..
+    ```
+    - Build the library.  If you know the number of threads available, you can specify to use more of them. Leaving one or two open should allow you to continue using your computer. For example, if you have 8 threads available, you can use the following argument to speed up build time:
+    ```
+    make --jobs=6
+    ```
+    - If you don't know how many threads, use the following command.  *This may take a while.*
+    ```
+    make
+    ```
+    - Install the library.  Just follow the recommended prompts.  Using `checkinstall` instead of `make install` builds a debian package, which makes uninstallation simple: `sudo dpkg -r ogre-1.9.1`
+    ```
+    sudo checkinstall --pkgname=ogre-1.9.1
+    ```
 
-5) Source the workspace
+    **RVIZ**
+    - Since Rviz depends on OGRE, it must be rebuilt from source as well.  However, since it is a ROS package, it can be built normally without much overhead.  From your workspace's `src` directory, execute the following commands.  Make sure you get the branch corresponding to your ROS distribution.
+    ```
+    git clone https://github.com/ros-visualization/rviz.git
+    cd rviz
+    git checkout melodic-devel
+    ```
 
-6) Set up the MySQL database.
+5) Build the workspace `catkin build`
+
+6) Source the workspace
+
+7) Set up the MySQL database.
     - an "offline_generated_paths" folder needs to be created. (Press CTRL+H to show hidden folders): ~/.local/share/offline_generated_paths
     - install MySQL and make sure you have root/admin access.
         a) If you do not already have mysql installed:
